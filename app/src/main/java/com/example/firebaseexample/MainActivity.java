@@ -1,5 +1,6 @@
 package com.example.firebaseexample;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,10 +29,11 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 private EditText et,et2;
-private Button btn,btnread;
+private Button btn,btnread,btnUpdate;
 private TextView  textv,textv2;
 
 private DatabaseReference rootDatabaseref;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,7 @@ private DatabaseReference rootDatabaseref;
         et2=findViewById(R.id.input2);
         btn=findViewById(R.id.btn);
         btnread = findViewById(R.id.btnRea);
+        btnUpdate = findViewById(R.id.btnupdate);
         textv = findViewById(R.id.txtr);
         textv2 = findViewById(R.id.txtr2);
 
@@ -49,8 +52,20 @@ private DatabaseReference rootDatabaseref;
             @Override
             public void onClick(View view) {
                 HashMap hashmap = new HashMap();
-                int id = Integer.parseInt(et.getText().toString());
+
+                String idStr = et.getText().toString().trim();
                 String name = et2.getText().toString();
+
+                if (idStr.isEmpty() || name.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Both ID and Name are required", Toast.LENGTH_SHORT).show();
+                    return;              }
+                int id;
+                try {
+                    id = Integer.parseInt(idStr);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, "Invalid ID format", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 hashmap.put("ID",id);
                 hashmap.put("Name",name);
                 rootDatabaseref.child("User1").setValue(hashmap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -90,6 +105,39 @@ private DatabaseReference rootDatabaseref;
                 });
             }
         });
+btnUpdate.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        HashMap hashmap = new HashMap();
 
+        String idStr = et.getText().toString().trim();
+        String name = et2.getText().toString().trim();
+
+        if (idStr.isEmpty() && name.isEmpty()) {
+            Toast.makeText(MainActivity.this, "Enter ID or Name to update", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!idStr.isEmpty()) {
+            try {
+                int id = Integer.parseInt(idStr);
+                hashmap.put("ID", id);
+            } catch (NumberFormatException e) {
+                Toast.makeText(MainActivity.this, "Invalid ID format", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        if (!name.isEmpty()) {
+            hashmap.put("Name", name);
+        }
+
+        rootDatabaseref.child("User1").updateChildren(hashmap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MainActivity.this,"Data update successfully",Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+});
     }
 }

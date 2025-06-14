@@ -15,7 +15,8 @@
        android:id="@+id/input"
        android:hint="Enter Text Here "
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
+        android:layout_marginRight="15dp"
+        android:inputType="number"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,6 +35,16 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
          />
+
+    <Button
+        android:id="@+id/btnupdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Upate"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        />
+
     <Button
         android:id="@+id/btnRea"
         android:layout_width="match_parent"
